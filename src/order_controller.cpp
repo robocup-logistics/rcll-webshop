@@ -57,7 +57,7 @@ void OrderController::connected() {
 }
 
 void OrderController::disconnected(const boost::system::error_code& err) {
-  m_connected = true;
+  m_connected = false;
   if(!(!err))
     throw std::runtime_error(err.message());
 }

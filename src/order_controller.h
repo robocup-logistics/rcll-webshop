@@ -24,7 +24,7 @@ class OrderController {
 
   void initConnectionObj();
 
-  bool convertOrderInfo(const ros_opencart::Order& in_order, llsf_msgs::OrderInfo& out_orders);
+  void convertOrderInfo(const ros_opencart::Order& in_order, llsf_msgs::OrderInfo& out_orders);
   void connected();
   void disconnected(const boost::system::error_code& err);
 

@@ -41,6 +41,7 @@ link_directories(
 
 
 add_executable(order_node src/order_node.cpp src/order_controller.cpp)
+add_executable(order_polling src/order_polling.cpp)
 
 target_link_libraries(order_node
   ${catkin_LIBRARIES}
@@ -49,3 +50,6 @@ target_link_libraries(order_node
   ${Protobuf_LIBRARIES}
 )
 
+target_link_libraries(order_polling
+  ${catkin_LIBRARIES}
+)

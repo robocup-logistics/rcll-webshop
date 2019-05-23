@@ -10,6 +10,7 @@ std::unique_ptr<OrderController> order_ctrl;
 
 void orderReceived(const ros_opencart::Order& order) {
   try {
+    ROS_INFO("Recieved Order Message (%d)", order.id);
     order_ctrl->sendOrder(order);
 
   } catch (const std::exception& ex) {

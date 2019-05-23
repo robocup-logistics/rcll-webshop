@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   ROS_INFO("%s: service_topic = %s", ros::this_node::getName().c_str(), service_topic.c_str());
   ROS_INFO("%s: order_topic = %s", ros::this_node::getName().c_str(), order_topic.c_str());
 
-  ros::Publisher pub = n.advertise<ros_opencart::Order>(order_topic, 1); 
+  ros::Publisher pub = n.advertise<ros_opencart::Order>(order_topic, 1, true); 
   ros::ServiceClient client = n.serviceClient<ros_opencart::GetCurrentOrders>(service_topic);
   ros_opencart::GetCurrentOrders service;
 

@@ -19,6 +19,7 @@
   <node pkg="opencart_refbox" name="order_polling" type="order_polling" output="screen">
     <param name="poll_frq" value="10" />
     <param name="service_topic" value="/GetCurrentOrders" />
+    <param name="update_topic" value="/UpdateOrder" />
     <param name="order_topic" value="/orderinfo" />
   </node>
 

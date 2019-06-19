@@ -28,135 +28,91 @@ void OrderController::initConnectionObj() {
 }
 
 void OrderController::convertOrderInfo(const ros_opencart::Order& in_order, llsf_msgs::OrderInfo& out_orders) {
-
-  //-- build dummy order
-  llsf_msgs::Order order;
-
-  bool base_appeared = false;
-  bool base_color_err = false;
-  bool cap_appeared = false;
-  bool cap_color_err = false;
-  uint8_t ring_count = 0;
-  bool ring_color_err = false;
-
-  //-- compose refbox order from message
+  
   for(const ros_opencart::Item& item : in_order.items) {
-    std::string model = item.model;
-    std::transform(model.begin(), model.end(), model.begin(), ::tolower);
+    llsf_msgs::Order* orderlist = out_orders.add_orders();
+    llsf_msgs::Order order;
+  
+    //-- set complexity 
+    int complexity = item.model[1]-'0';
+    switch(complexity) {
+      case 0:
+        order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C0);
+        break;
+      case 1:
+        order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C1);
+        break;
+      case 2:
+        order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C2);
+        break;
+      case 3:
+        order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C3);
+        break;
+    };
 
-    if(model.substr(0,4).compare("cap_") == 0 && !cap_appeared) {
-      std::string colorstr = model.substr(4);
+    //-- determine component colors
+    llsf_msgs::BaseColor base_color;
+    llsf_msgs::CapColor cap_color;
+    std::vector<llsf_msgs::RingColor> ring_colors(complexity);
 
-      llsf_msgs::CapColor color;
-      if(colorstr.compare("black") == 0)
-        color = llsf_msgs::CapColor::CAP_BLACK;
-      else if(colorstr.compare("gray") == 0)
-        color = llsf_msgs::CapColor::CAP_GREY;
-
-      else {
-	std::stringstream errmsg;
-	errmsg << "Unknown CAP_COLOR (" << model << ")"; 
-	throw std::runtime_error(errmsg.str());
-      }
-
-      order.set_cap_color(color);
-      cap_appeared = true;
-
-    } else if(model.substr(0,5).compare("base_") == 0 && !base_appeared) {
-      std::string colorstr = model.substr(5);
-
-      llsf_msgs::BaseColor color;
-      if(colorstr.compare("red") == 0)
-        color = llsf_msgs::BaseColor::BASE_RED;
-
-      else if(colorstr.compare("black") == 0)
-        color = llsf_msgs::BaseColor::BASE_BLACK;
-
-      else if(colorstr.compare("silver") == 0)
-        color = llsf_msgs::BaseColor::BASE_SILVER;
+    for(const ros_opencart::Option& option : item.options) {
+      std::string name = option.name;
+      std::transform(name.begin(), name.end(), name.begin(), ::tolower);
       
-      else {
-	std::stringstream errmsg;
-	errmsg << "Unknown BASE_COLOR (" << model << ")"; 
-	throw std::runtime_error(errmsg.str());
+      std::string value = option.value;
+      std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+
+      if(!name.substr(0,5).compare("base_")) {
+	if(!value.compare("red"))
+	  base_color = llsf_msgs::BaseColor::BASE_RED;
+	else if(!value.compare("black"))
+	  base_color = llsf_msgs::BaseColor::BASE_BLACK;
+	else  
+  	  base_color = llsf_msgs::BaseColor::BASE_SILVER;
+
+	order.set_base_color(base_color);
+
+      } else if(!name.substr(0,4).compare("cap_")) {
+	if(!value.compare("black"))
+	  cap_color = llsf_msgs::CapColor::CAP_BLACK;
+	else
+	  cap_color = llsf_msgs::CapColor::CAP_GREY;
+	
+	order.set_cap_color(cap_color);
+      
+      } else if(!name.substr(0,5).compare("ring_")) {
+	int ring_idx = name[name.length()-1]-'0'-1;
+
+	if(!value.compare("blue"))
+	  ring_colors[ring_idx] = llsf_msgs::RingColor::RING_BLUE;
+	else if(!value.compare("green"))
+	  ring_colors[ring_idx] = llsf_msgs::RingColor::RING_GREEN;
+	else if(!value.compare("orange"))
+	  ring_colors[ring_idx] = llsf_msgs::RingColor::RING_ORANGE;
+	else  
+  	  ring_colors[ring_idx] = llsf_msgs::RingColor::RING_YELLOW;
       }
-
-      order.set_base_color(color);
-      base_appeared = true;
-
-    } else if(model.substr(0,5).compare("ring_") == 0) {
-      std::string colorstr = model.substr(5);
-
-      llsf_msgs::RingColor color;
-      if(colorstr.compare("blue") == 0)
-        color = llsf_msgs::RingColor::RING_BLUE;
-
-      else if(colorstr.compare("green") == 0)
-        color = llsf_msgs::RingColor::RING_GREEN;
-
-      else if(colorstr.compare("orange") == 0)
-        color = llsf_msgs::RingColor::RING_ORANGE;
-
-      else if(colorstr.compare("yellow") == 0)
-        color = llsf_msgs::RingColor::RING_YELLOW;
-
-      else {
-	std::stringstream errmsg;
-	errmsg << "Unknown RING_COLOR (" << model << ")"; 
-	throw std::runtime_error(errmsg.str());
-      }
-
-      order.add_ring_colors(color);
-      ring_count++;
-
-    } else {
-	std::stringstream errmsg;
-	errmsg << "Unknown model (" << model << ")"; 
-	throw std::runtime_error(errmsg.str());
     }
+  
+    //-- apply ring colors
+    for(llsf_msgs::RingColor rc : ring_colors)
+      order.add_ring_colors(rc);
+
+
+    
+    //-- this is ignored by refbox, anyways
+    order.set_id(1337);
+    order.set_delivery_gate(1);
+    order.set_delivery_period_begin(1);
+    order.set_delivery_period_end(2);
+    order.set_quantity_delivered_cyan(0);
+    order.set_quantity_delivered_magenta(0);
+    order.set_competitive(false);
+
+    order.set_quantity_requested(1);
+
+    orderlist[0] = order;
   }
-
-  //-- invalid order
-  if(!base_appeared)
-    throw std::runtime_error("Base is missing.");
-
-  else if(!cap_appeared)
-    throw std::runtime_error("Cap is missing.");
-
-  else if(ring_count > 3) {
-    std::stringstream errmsg;
-    errmsg << "To many rings added. max is 3 got " << ring_count;
-    throw std::runtime_error(errmsg.str());
-  }
-
-  switch(ring_count) {
-    case 0:
-      order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C0);
-      break;
-    case 1:
-      order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C1);
-      break;
-    case 2:
-      order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C2);
-      break;
-    case 3:
-      order.set_complexity(llsf_msgs::Order_Complexity::Order_Complexity_C3);
-      break;
-  };
-
-  //-- this is ignored by refbox, anyways
-  order.set_id(1337);
-  order.set_delivery_gate(1);
-  order.set_delivery_period_begin(1);
-  order.set_delivery_period_end(2);
-  order.set_quantity_delivered_cyan(0);
-  order.set_quantity_delivered_magenta(0);
-  order.set_competitive(false);
-
-  order.set_quantity_requested(1);
-
-  llsf_msgs::Order* orderlist = out_orders.add_orders();
-  orderlist[0] = order;
 }
 
 void OrderController::connected() {

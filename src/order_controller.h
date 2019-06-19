@@ -8,6 +8,7 @@
 
 #include <ros_opencart/Order.h>
 #include <ros_opencart/Item.h>
+#include <ros_opencart/Option.h>
 
 #include <protobuf_comm/client.h>
 #include <msgs/OrderInfo.pb.h>

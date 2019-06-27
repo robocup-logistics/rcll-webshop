@@ -655,7 +655,11 @@ class ModelCheckoutOrder extends Model {
 				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 				$mail->setHtml($this->load->view('mail/order', $data));
 				$mail->setText($text);
-				$mail->send();
+				try {
+                    $mail->send();
+				} catch (Throwable $t) {
+				    error_log("addOrderHistory: Unable to send mail: ". $t->getMessage(), 0);
+                }
 	
 				// Admin Alert Mail
 				if (in_array('order', (array)$this->config->get('config_mail_alert'))) {
@@ -743,7 +747,11 @@ class ModelCheckoutOrder extends Model {
 					$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 					$mail->setHtml($this->load->view('mail/order', $data));
 					$mail->setText($text);
-					$mail->send();
+                    try {
+                        $mail->send();
+                    } catch (Throwable $t) {
+                        error_log("addOrderHistory: Unable to send mail: ". $t->getMessage(), 0);
+                    }
 	
 					// Send to additional alert emails
 					$emails = explode(',', $this->config->get('config_alert_email'));
@@ -751,7 +759,12 @@ class ModelCheckoutOrder extends Model {
 					foreach ($emails as $email) {
 						if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 							$mail->setTo($email);
-							$mail->send();
+							
+                            try {
+                                $mail->send();
+                            } catch (Throwable $t) {
+                                error_log("addOrderHistory: Unable to send mail: ". $t->getMessage(), 0);
+                            }
 						}
 					}
 				}
@@ -801,7 +814,12 @@ class ModelCheckoutOrder extends Model {
 				$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
 				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 				$mail->setText($message);
-				$mail->send();
+				
+				try {
+                    $mail->send();
+				} catch (Throwable $t) {
+				    error_log("addOrderHistory: Unable to send mail: ". $t->getMessage(), 0);
+                }
 			}
 		}
 	}

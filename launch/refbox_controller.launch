@@ -5,21 +5,21 @@
   <arg name="shopApiKey" default="7v43MvjXl9b6q66TpIOlIvFarz6SOeO1CKgJEd7trMQBPSMYk5YD8Ky6xdmXANlldPHGbg1c82HAeDWygwh552grEnrwjGHQ08roRSXq3gNOLFqPZo9G4FjN9ckNIiv8P0ATApkQbZscGY9drCjNZisVfsc8yeuzCNDAR0xCWyxlssFkAReGVYtLWgRCY0IVffZudct7NXpcTwcTxl2HhM1OWrgLJ0YPTHG49MCDng6zisLMMuFOEk1sFc1Srews" />
 
   <node pkg="opencart_refbox" name="order_node" type="order_node" output="screen">
-    <param name="order_topic" value="/orderinfo" />
-    <param name="refbox_host" value="localhost" />
-    <param name="refbox_port" value="4444" />
+    <param name="order_topic"  value="/orderinfo" />
+    <param name="update_topic" value="/UpdateOrder" />
+    <!--param name="refbox_host"  value="172.26.108.250" /-->
+    <param name="refbox_port"  value="4444" />
     <param name="message_path" value="$(env HOME)/edge/rcll-refbox/src/msgs/" />
   </node>
 
 
-  <node name="OpenCartOrderServer" pkg="ros_opencart" type="OpenCartOrderServer" output="screen" 
+  <node name="OpenCartOrderServer" pkg="ros_opencart" type="OpenCartOrderServer" output="screen"
     args="$(arg shopDomain) $(arg shopPath) $(arg shopApiKey)">
   </node>
 
   <node pkg="opencart_refbox" name="order_polling" type="order_polling" output="screen">
-    <param name="poll_frq" value="10" />
+    <param name="poll_frq" value="1" />
     <param name="service_topic" value="/GetCurrentOrders" />
-    <param name="update_topic" value="/UpdateOrder" />
     <param name="order_topic" value="/orderinfo" />
   </node>
 

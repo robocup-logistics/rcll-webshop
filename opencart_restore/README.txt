@@ -1,7 +1,9 @@
 CREDENTIALS:
 opencart-admin: admin admin
-opencart-user: spectator@rcll.ac pass
+opencart-user: spectator.audience@gmail.com pass
 mysql-root: root Ro0t.123
+gmail: spectator.audience@gmail.com rcll.demo
+
 
 DEPENDENCIES:
 * ROS (>= kinetic)
@@ -19,9 +21,12 @@ RESTORE OPENCART:
           #> chown apache opencart 
           #> chgrp apache opencart)
 2b. Ensure the webdeamons access policies when you are using SELinux.
+2c. Enable server to send E-Mails
+    (e.g. #> setsebool -P httpd_can_sendmail 1)
 3.  Make sure there is no database called opencart_ros yet and read sqldump to 
     database system.
     (e.g. #> mysql -u root -p < opencart_ros.sql)
+
 
 RefBox and Connection Nodes:
 1. Build RefBox according to the install instructions:

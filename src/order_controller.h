@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <functional>
 
 #include <boost/system/error_code.hpp>
 
@@ -22,6 +23,7 @@ class OrderController {
 
   ProtobufClientPtr m_connection;
   bool m_connected;
+  std::string m_last_error;
 
   void initConnectionObj();
 
@@ -29,14 +31,19 @@ class OrderController {
   void connected();
   void disconnected(const boost::system::error_code& err);
 
+  void messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg);
+
 public:
   OrderController(const std::string& path);
+
+  std::function<void (uint32_t)> delivered_callback;
 
   void setRefboxHost(const std::string& host);
   const std::string& getRefboxHost();
   void setPort(uint32_t port);
   uint32_t getPort();
   bool isConnected();
+  bool getLastError(std::string&);
 
   void connect();
   void disconnect();

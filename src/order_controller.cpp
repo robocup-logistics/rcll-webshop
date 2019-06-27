@@ -3,6 +3,8 @@
 #include <exception>
 #include <algorithm>
 
+#include <iostream>
+
 #include "order_controller.h"
 
 #include <ros/ros.h>
@@ -11,6 +13,7 @@ OrderController::OrderController(const std::string& path)
   : m_msgpath(path)
   , m_connected(false)
   , m_connection(nullptr)
+  , delivered_callback([] (uint32_t) -> void {})
 {
   initConnectionObj();
 }
@@ -25,6 +28,13 @@ void OrderController::initConnectionObj() {
   m_connection->signal_disconnected().connect(
 		  boost::bind(&OrderController::disconnected, boost::ref(*this), boost::placeholders::_1)
 	          );
+  m_connection->signal_received().connect(
+                  boost::bind(&OrderController::messageResceived
+                            , boost::ref(*this)
+                            , boost::placeholders::_1
+                            , boost::placeholders::_2
+                            , boost::placeholders::_3)
+                  );
 }
 
 void OrderController::convertOrderInfo(const ros_opencart::Order& in_order, llsf_msgs::OrderInfo& out_orders) {
@@ -98,10 +108,11 @@ void OrderController::convertOrderInfo(const ros_opencart::Order& in_order, llsf
     for(llsf_msgs::RingColor rc : ring_colors)
       order.add_ring_colors(rc);
 
-
+    //-- transmit original order id to react on responses
+    //-- THIS WILL NOT WORK FOR MULTIPLE ORDERS IN A SINGLE ORDERINFO AKA. SHOPPINGCART
+    order.set_id(in_order.id);
     
     //-- this is ignored by refbox, anyways
-    order.set_id(1337);
     order.set_delivery_gate(1);
     order.set_delivery_period_begin(1);
     order.set_delivery_period_end(2);
@@ -122,7 +133,16 @@ void OrderController::connected() {
 void OrderController::disconnected(const boost::system::error_code& err) {
   m_connected = false;
   if(!(!err))
-    throw std::runtime_error(err.message());
+    m_last_error = err.message();
+}
+
+void OrderController::messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg) {
+  std::shared_ptr<llsf_msgs::SetOrderDelivered> g;
+  if (msg_type == 43 && (g = std::dynamic_pointer_cast<llsf_msgs::SetOrderDelivered>(msg))) {
+    uint32_t ext_id = g->order_id();
+    delivered_callback(ext_id);
+    //std::cout << "order " << ext_id << " was delivered\n";
+  }
 }
 
 
@@ -144,13 +164,19 @@ bool OrderController::isConnected() {
   return m_connected;
 }
 
+bool OrderController::getLastError(std::string& error_msg) {
+  error_msg = m_last_error;
+  m_last_error = "";
+  return error_msg.length() > 0;
+}
+
 
 
 void OrderController::connect() {
   if(m_connected)
     return;
 
-  m_connection->async_connect(m_refboxhost.c_str(), m_port);
+   m_connection->async_connect(m_refboxhost.c_str(), m_port);
 }
 void OrderController::disconnect() {
   if(!m_connected)

@@ -1,0 +1,5 @@
+int32 id
+string status
+---
+int8 errorcode
+string errormsg

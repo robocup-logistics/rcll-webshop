@@ -1,0 +1,12 @@
+int32 id
+string status
+string firstName
+string lastName
+string address1
+string address2
+string room
+string zip
+string city
+string email
+string telephone
+Item[] items

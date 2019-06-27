@@ -1,0 +1,7 @@
+<launch>
+    <arg name="shopDomain" default="http://localhost/opencart" />
+    <arg name="shopPath" default="/index.php" />
+    <arg name="shopApiKey" default="7v43MvjXl9b6q66TpIOlIvFarz6SOeO1CKgJEd7trMQBPSMYk5YD8Ky6xdmXANlldPHGbg1c82HAeDWygwh552grEnrwjGHQ08roRSXq3gNOLFqPZo9G4FjN9ckNIiv8P0ATApkQbZscGY9drCjNZisVfsc8yeuzCNDAR0xCWyxlssFkAReGVYtLWgRCY0IVffZudct7NXpcTwcTxl2HhM1OWrgLJ0YPTHG49MCDng6zisLMMuFOEk1sFc1Srews" />
+    <node name="OpenCartOrderServer" pkg="ros_opencart" type="OpenCartOrderServer" output="screen" args="$(arg shopDomain) $(arg shopPath) $(arg shopApiKey)">
+    </node>
+</launch>

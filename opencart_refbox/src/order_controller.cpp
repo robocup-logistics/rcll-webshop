@@ -120,7 +120,7 @@ void OrderController::convertOrderInfo(const ros_opencart::Order& in_order, llsf
     order.set_quantity_delivered_magenta(0);
     order.set_competitive(false);
 
-    order.set_quantity_requested(1);
+    order.set_quantity_requested(item.quantity);
 
     orderlist[0] = order;
   }

@@ -13,6 +13,7 @@ OrderController::OrderController(const std::string& path)
   : m_msgpath(path)
   , m_connected(false)
   , m_connection(nullptr)
+  , transmitted_callback([] (uint32_t) -> void {})
   , delivered_callback([] (uint32_t) -> void {})
 {
   initConnectionObj();
@@ -137,11 +138,21 @@ void OrderController::disconnected(const boost::system::error_code& err) {
 }
 
 void OrderController::messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg) {
-  std::shared_ptr<llsf_msgs::SetOrderDelivered> g;
-  if (msg_type == 43 && (g = std::dynamic_pointer_cast<llsf_msgs::SetOrderDelivered>(msg))) {
-    uint32_t ext_id = g->order_id();
-    delivered_callback(ext_id);
-    //std::cout << "order " << ext_id << " was delivered\n";
+  if (msg_type == 43) {
+    auto g = std::dynamic_pointer_cast<llsf_msgs::SetOrderDelivered>(msg);
+    if (g != nullptr) {
+      uint32_t ext_id = g->order_id();
+      delivered_callback(ext_id);
+      //std::cout << "order " << ext_id << " was delivered\n";
+    }
+
+  } else if (msg_type == 42) { 
+    auto g = std::dynamic_pointer_cast<llsf_msgs::Order>(msg);
+    if (g != nullptr) {
+      uint32_t ext_id = g->id();
+      transmitted_callback(ext_id);
+      //std::cout << "order " << ext_id << " was transmitted\n";
+    }
   }
 }
 

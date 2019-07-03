@@ -36,6 +36,7 @@ class OrderController {
 public:
   OrderController(const std::string& path);
 
+  std::function<void (uint32_t)> transmitted_callback;
   std::function<void (uint32_t)> delivered_callback;
 
   void setRefboxHost(const std::string& host);

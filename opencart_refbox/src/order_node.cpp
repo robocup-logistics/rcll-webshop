@@ -27,16 +27,6 @@ void process_order(const ros_opencart::Order& order) {
     ROS_INFO("Recieved Order Message (%d)", order.id);
     order_ctrl->sendOrder(order);
 
-    //-- create status update request
-    ros_opencart::UpdateOrder updateService;
-    updateService.request.status = "processing";
-
-    //-- querry status update
-    updateService.request.id = order.id;
-    if(!update_client->call(updateService) || updateService.response.errorcode) {
-      ROS_ERROR("Could not update order %d status to %s (%s)", order.id, updateService.request.status.c_str(), updateService.response.errormsg.c_str());
-    }
-
   } catch (const std::exception& ex) {
     ROS_ERROR("Error sending order (%s)", ex.what());
   }
@@ -56,6 +46,20 @@ void update_order_delivered(uint32_t ext_order_id) {
   }
 }
 
+void update_order_transmitted(uint32_t ext_order_id) {
+  ROS_INFO("Order %d was transmitted", ext_order_id);
+
+  //-- create status update request
+  ros_opencart::UpdateOrder updateService;
+  updateService.request.status = "processing";
+
+  //-- querry status update
+  updateService.request.id = ext_order_id;
+  if(!update_client->call(updateService) || updateService.response.errorcode) {
+    ROS_ERROR("Could not update order %d status to %s (%s)", ext_order_id, updateService.request.status.c_str(), updateService.response.errormsg.c_str());
+  }
+}
+	
 int main(int argc, char** argv) {
   ros::init(argc, argv, "order_controller"); 
 
@@ -81,6 +85,7 @@ int main(int argc, char** argv) {
   order_ctrl->setRefboxHost(refbox_host);
   order_ctrl->setPort(static_cast<uint32_t>(refbox_port));
   order_ctrl->delivered_callback = &update_order_delivered;
+  order_ctrl->transmitted_callback = &update_order_transmitted;
 
   order_ctrl->connect();
 

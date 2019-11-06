@@ -11,7 +11,10 @@ DEPENDENCIES:
 * php
 * mysql databse system (or other opencart compatible database)
 * apache webserver (or other opencart compatible webserver))
+* opencart
 
+SETUP DATABASE:
+1.  Make sure your Database setup matches the Credentials.
 
 RESTORE OPENCART:
 1.  Copy opencart forlder to the web-root of your webserver.
@@ -32,10 +35,19 @@ RESTORE OPENCART:
 REFBOX AND CONNECTION NODES
 1. Build RefBox according to the install instructions:
    https://github.com/robocup-logistics/rcll-refbox/wiki/Install
-2. Put refbox/custom-orders.clp (of this project) into <rcll-refbox-path>/src/game/rcll
-   (e.g. #> cp refbox/custom-orders.clp $HOME/edge/src/game/rcll)
-3. Load the additional rules to activate custom-orders by 
-   editing <rcll-refbox-path>/src/game/rcll/refbox.cpl:
-   add (load* (resolve-file custom-orders.clp)) after the already load facts
+2. Change <rcll-refbox-path>/cfg/config.yaml:
+	webshop:
+		enable: false
+   to:
+	webshop:
+		enable: true
+3. Change Refbox Message Path in opencart_refbox/launch/refbox_controller.launch:
+	<param name="message_path" value="<path-to/your-refbox>/src/msgs/" />
+
 4. Build catkin workspace with
    #> catkin_make -DREFBOX_PATH=<rcll-refbox-path>
+
+KNOWN PITFALLS:
+	Disable SELinux temporarily for opencart installation
+	Make sure all read/write options are properly set up (chmod 0755) for opencart as well as
+	the webshop

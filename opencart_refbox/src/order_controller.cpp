@@ -150,15 +150,12 @@ void OrderController::messageResceivedfailed(uint16_t comp_id, uint16_t msg_type
 }
 
 void OrderController::messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg) {
-	// DEBUG STUFF
-	// ROS_INFO("msg_type: (%d)", msg_type);
-	// DEBUG_STUFF
   if (msg_type == 43) {
     auto g = std::dynamic_pointer_cast<llsf_msgs::SetOrderDelivered>(msg);
     if (g != nullptr) {
       uint32_t ext_id = g->order_id();
       delivered_callback(ext_id);
-      std::cout << "order " << ext_id << " was delivered\n";
+      ROS_INFO("Order: (%d) was delivered", ext_id);
     }
 
   } else if (msg_type == 42) { 
@@ -166,14 +163,14 @@ void OrderController::messageResceived(uint16_t comp_id, uint16_t msg_type, std:
     if (g != nullptr) {
       uint32_t ext_id = g->id();
       transmitted_callback(ext_id);
-      std::cout << "order " << ext_id << " was transmitted\n";
+      ROS_INFO("Order: (%d) was transmitted", ext_id);
     }
   } 
-  // DEBUG_STUFF
+  // DEBUG
   else if (msg_type != 42 || msg_type != 43) {
 	//ROS_INFO("msg_type: (%d)", msg_type);
   }
-	// DEBUG_STUFF
+  // DEBUG
 }
 
 

@@ -16,7 +16,6 @@
 
 class OrderController {
   typedef std::unique_ptr<protobuf_comm::ProtobufStreamClient> ProtobufClientPtr;
-  //protobuf_comm::ProtobufStreamClient *m_connection;
 	
   std::string m_msgpath;
   std::string m_refboxhost;

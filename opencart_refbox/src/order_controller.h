@@ -31,7 +31,7 @@ class OrderController {
   void connected();
   void disconnected(const boost::system::error_code& err);
 
-  void messageResceivedfailed(uint16_t comp_id, uint16_t msg_type, std::string recv_error);
+  void messageReceivedfailed(uint16_t comp_id, uint16_t msg_type, std::string recv_error);
   void messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg);
 
 public:

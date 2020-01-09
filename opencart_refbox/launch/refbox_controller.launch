@@ -9,7 +9,7 @@
     <param name="update_topic" value="/UpdateOrder" />
     <param name="refbox_host"  value="localhost" />
     <param name="refbox_port"  value="4444" />
-    <param name="message_path" value="PATH-TO/YOUR-RCLL-REFBOX/src/msgs/" />
+    <param name="message_path" value="$(env RCLL_REFBOX_DIR)/src/msgs/" />
   </node>
 
 

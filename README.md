@@ -1,4 +1,4 @@
-# proj_rcfs2019_opencart
+# RoboCup Logistics League OpenCart Webshop
 
 OpenCart usage in RoboCup Logistics League
 

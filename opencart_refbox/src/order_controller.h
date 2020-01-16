@@ -16,6 +16,7 @@
 
 class OrderController {
   typedef std::unique_ptr<protobuf_comm::ProtobufStreamClient> ProtobufClientPtr;
+  //protobuf_comm::ProtobufStreamClient *m_connection;
 	
   std::string m_msgpath;
   std::string m_refboxhost;
@@ -31,7 +32,8 @@ class OrderController {
   void connected();
   void disconnected(const boost::system::error_code& err);
 
-  void messageResceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg);
+  void messageReceivedfailed(uint16_t comp_id, uint16_t msg_type, std::string recv_error);
+  void messageReceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg);
 
 public:
   OrderController(const std::string& path);

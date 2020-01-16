@@ -7,9 +7,9 @@
   <node pkg="opencart_refbox" name="order_node" type="order_node" output="screen">
     <param name="order_topic"  value="/orderinfo" />
     <param name="update_topic" value="/UpdateOrder" />
-    <!--param name="refbox_host"  value="172.26.108.250" /-->
+    <param name="refbox_host"  value="localhost" />
     <param name="refbox_port"  value="4444" />
-    <param name="message_path" value="$(env HOME)/edge/rcll-refbox/src/msgs/" />
+    <param name="message_path" value="$(env RCLL_REFBOX_DIR)/src/msgs/" />
   </node>
 
 

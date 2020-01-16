@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  ROS_INFO("Conneced to refbox at %s:%d", refbox_host.c_str(), refbox_port);
+  ROS_INFO("Connected to refbox at %s:%d", refbox_host.c_str(), refbox_port);
 
   //-- create service client controller
   ros::ServiceClient hack = nh.serviceClient<ros_opencart::UpdateOrder>(update_topic);

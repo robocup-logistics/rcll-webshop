@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 bool get(ros_opencart::GetCurrentOrders::Request &req,
          ros_opencart::GetCurrentOrders::Response &res)
 {
-  //ROS_INFO("GetCurrentOrders");
+  // ROS_INFO("GetCurrentOrders");
 
   auto token = std::string();
   // Create http_client to send the request.
@@ -163,7 +163,7 @@ bool get(ros_opencart::GetCurrentOrders::Request &req,
 
           }
 
-          //ROS_INFO("sending back order response");
+        // ROS_INFO("sending back order response");
         }
       }
       return true;
@@ -244,7 +244,7 @@ bool update(ros_opencart::UpdateOrder::Request &rosReq,
         int json_idx = response_str.find('{');
 
         if(json_idx > 0)
-          ROS_WARN("JSON response had prefix:\n%s", response_str.substr(0,json_idx).c_str());
+        // ROS_WARN("JSON response had prefix:\n%s", response_str.substr(0,json_idx).c_str());
 
         response_str = response_str.substr(json_idx);
         auto json = web::json::value::parse(response_str);
@@ -306,8 +306,8 @@ bool login(std::string &token, http_client &client, std::map<std::string,std::st
       return false;
     }
 
-    // ROS_INFO("Received response status code:%u", response.status_code());
-    // ROS_INFO("Got: %s", response.to_string().c_str());
+    //ROS_INFO("Received response status code:%u", response.status_code());
+    //ROS_INFO("Got: %s", response.to_string().c_str());
 
     auto headers = response.headers();
     auto it = headers.find("Set-Cookie");
@@ -331,7 +331,7 @@ bool login(std::string &token, http_client &client, std::map<std::string,std::st
       return false;
     } else {
       token = json.at(U("token")).as_string();
-      // ROS_INFO("Login successful");
+      //ROS_INFO("Login successful");
       return true;
     }
   }

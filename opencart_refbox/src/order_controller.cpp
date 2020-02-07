@@ -145,8 +145,10 @@ void OrderController::disconnected(const boost::system::error_code& err) {
 }
 
 void OrderController::messageReceivedfailed(uint16_t comp_id, uint16_t msg_type, std::string recv_error){
-	ROS_INFO("Error while receiving Msg: (%d):(%d)", comp_id, msg_type);
-	ROS_INFO_STREAM("Error Message: " + recv_error);
+	if (comp_id != 2003) {
+		ROS_INFO("Error while receiving Msg: (%d):(%d)", comp_id, msg_type);
+		ROS_INFO_STREAM("Error Message: " + recv_error);
+	}
 }
 
 void OrderController::messageReceived(uint16_t comp_id, uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg) {

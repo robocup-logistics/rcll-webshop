@@ -27,6 +27,7 @@ OpenCart usage in RoboCup Logistics League
 ## SETUP WEBSHOP:
 1.  Copy the opencart folder from opencart_restore into the web-root of your webserver.
     (e.g. /var/www/http)
+1a. Make sure the opencart folder has the correct read and write access (refer to opencart installation)
 2.  Change the user and group of the opencart folder to the webdeamons user. For example:
     ```bash
     $ cd /var/www/http 

@@ -24,6 +24,8 @@ OpenCart usage in RoboCup Logistics League
 ## SETUP DATABASE:
 1.  Make sure your Database setup matches the Credentials.
 
+2.  Create a database called opencart_ros. 
+
 ## SETUP WEBSHOP:
 1.  Copy the opencart folder from opencart_restore into the web-root of your webserver.
     (e.g. /var/www/http)
@@ -42,9 +44,9 @@ OpenCart usage in RoboCup Logistics League
    ```bash
    $ setsebool -P httpd_can_sendmail 1
    ```
-5.  Make sure there is no database called opencart_ros yet and read sqldump to database system. For example:
+5.  Read sqldump to database system. For example:
     ```bash
-    $ mysql -u root -p < opencart_ros.sql
+    $ mysql -u root -p opencart_ros < opencart_ros.sql
     ```
 
 

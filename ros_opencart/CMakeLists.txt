@@ -20,21 +20,29 @@ find_package(catkin REQUIRED COMPONENTS
 find_library(boost_system_LIBRARY REQUIRED NAMES boost_system PATHS
     /usr/lib
     /usr/local/lib
+    /usr/lib64
+    /usr/local/lib64
 )
 
 find_library(crypto_LIBRARY REQUIRED NAMES crypto PATHS
     /usr/lib
     /usr/local/lib
+    /usr/lib64
+    /usr/local/lib64
 )
 
 find_library(ssl_LIBRARY REQUIRED NAMES ssl PATHS
     /usr/lib
     /usr/local/lib
+    /usr/lib64
+    /usr/local/lib64
 )
 
 find_library(cpprest_LIBRARY REQUIRED NAMES cpprest PATHS
     /usr/lib
     /usr/local/lib
+    /usr/lib64
+    /usr/local/lib64
 )
 
 

@@ -75,7 +75,11 @@ $ export RCLL_REFBOX_DIR=<path-to/your-refbox-directory>
 $ catkin_make -DREFBOX_PATH=<path-to/your-refbox-directory>
 ```
 
-KNOWN PITFALLS:
+4. Launch
+```bash
+$ roslaunch opencart_refbox refbox_controller.launch
+```
+## KNOWN PITFALLS:
         Disable SELinux temporarily for opencart installation
         Make sure all read/write options are properly set up (chmod 0755) for opencart as well as
         the webshop

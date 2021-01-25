@@ -48,6 +48,15 @@ OpenCart usage in RoboCup Logistics League
     ```bash
     $ mysql -u root -p opencart_ros < opencart_ros.sql
     ```
+6.  Set your hostname in _/your/path/to/htmlorhttp/opencart/config.php_
+    ```php
+    // HTTP
+    define('HTTP_SERVER', 'http://YOURHOSTNAME/opencart/');
+
+    // HTTPS
+    define('HTTPS_SERVER', 'http://YOURHOSTNAME/opencart/');
+    ```
+    
 
 
 ## SETUP REFBOX

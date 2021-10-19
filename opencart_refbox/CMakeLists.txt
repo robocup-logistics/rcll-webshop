@@ -53,3 +53,6 @@ target_link_libraries(order_node
 target_link_libraries(order_polling
   ${catkin_LIBRARIES}
 )
+
+add_dependencies(order_node ros_opencart ros_opencart_gencpp)
+add_dependencies(order_polling ros_opencart ros_opencart_gencpp)

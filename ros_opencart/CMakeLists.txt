@@ -148,6 +148,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+  "include.bckwq"
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -228,10 +229,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-
-
-include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(OpenCartOrderServer src/OpenCartOrderServer.cpp)
 target_link_libraries(OpenCartOrderServer ${catkin_LIBRARIES})
